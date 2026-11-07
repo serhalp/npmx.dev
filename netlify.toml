@@ -2,7 +2,8 @@
 # (CDN caching, storage, trailing slashes) lives in modules/netlify.ts.
 
 [build]
-command = "pnpm build"
+# Lunaria builds translation status from git history, which a shallow clone hides.
+command = "if [ \"$(git rev-parse --is-shallow-repository)\" = true ]; then git fetch --unshallow --quiet; fi; pnpm build"
 publish = "dist"
 
 [build.environment]
