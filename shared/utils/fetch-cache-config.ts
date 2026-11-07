@@ -2,7 +2,8 @@
  * Configuration for the stale-while-revalidate fetch cache.
  *
  * This cache intercepts external API calls during SSR and caches responses
- * using Nitro's storage layer (backed by Vercel's runtime cache in production).
+ * using Nitro's storage layer (backed by Vercel's runtime cache or Netlify's Cache API in
+ * production).
  */
 
 import type { FetchOptions } from 'ofetch'

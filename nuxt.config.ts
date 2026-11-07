@@ -307,7 +307,7 @@ export default defineNuxtConfig({
       },
     },
     // Storage configuration for local development
-    // In production (Vercel), this is overridden by modules/cache.ts
+    // In production, this is overridden by modules/cache.ts (Vercel) or modules/netlify.ts
     storage: {
       'fetch-cache': {
         driver: 'fsLite',

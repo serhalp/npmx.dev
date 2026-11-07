@@ -56,3 +56,6 @@ storybook-static
 .vscode/mcp.json
 AGENTS.md
 .vitest/
+
+# Netlify
+.netlify

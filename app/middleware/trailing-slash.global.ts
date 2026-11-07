@@ -2,7 +2,8 @@
  * Removes trailing slashes from URLs.
  *
  * This middleware only runs in development to maintain consistent behavior.
- * In production, Vercel handles this redirect via vercel.json.
+ * In production, Vercel handles this redirect via vercel.json, and Netlify in its function
+ * entry (modules/runtime/netlify/cdn.ts).
  *
  * - /package/vue/ → /package/vue
  * - /docs/getting-started/?query=value → /docs/getting-started?query=value

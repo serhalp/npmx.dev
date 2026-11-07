@@ -1,0 +1,72 @@
+# Netlify deployment. The Vercel equivalent is vercel.json; Netlify-specific runtime behaviour
+# (CDN caching, storage, trailing slashes) lives in modules/netlify.ts.
+
+[build]
+command = "pnpm build"
+publish = "dist"
+
+[build.environment]
+NODE_VERSION = "24"
+
+# Subdomain shortcuts. Each host must be added as a domain alias on the Netlify project.
+# Kept in sync with vercel.json by test/unit/netlify-config.spec.ts.
+
+[[redirects]]
+from = "https://build.npmx.dev/*"
+to = "https://discord.gg/x9KE5U2q8w"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://chat.npmx.dev/*"
+to = "https://discord.gg/CjZM5qRbCu"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://social.npmx.dev/*"
+to = "https://bsky.app/profile/npmx.dev"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://repo.npmx.dev/*"
+to = "https://github.com/npmx-dev/npmx.dev"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://issues.npmx.dev/*"
+to = "https://github.com/npmx-dev/npmx.dev/issues"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://coc.npmx.dev/*"
+to = "https://github.com/npmx-dev/npmx.dev/blob/main/CODE_OF_CONDUCT.md"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://contributing.npmx.dev/*"
+to = "https://github.com/npmx-dev/npmx.dev/blob/main/CONTRIBUTING.md"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://governance.npmx.dev/*"
+to = "https://github.com/npmx-dev/npmx.dev/blob/main/GOVERNANCE.md"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://license.npmx.dev/*"
+to = "https://github.com/npmx-dev/npmx.dev/blob/main/LICENSE"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://i18n.npmx.dev/*"
+to = "https://main.npmx.dev/translation-status"
+status = 301
+force = true

@@ -26,8 +26,17 @@ const config: KnipConfig = {
       msw: {
         entry: ['.storybook/.public/mockServiceWorker.js'],
       },
-      ignoreDependencies: ['@iconify-json/*', 'puppeteer', 'vite-plugin-pwa', '@vueuse/shared'],
-      ignoreUnresolved: ['#oauth/config'],
+      ignoreDependencies: [
+        '@iconify-json/*',
+        'puppeteer',
+        'vite-plugin-pwa',
+        '@vueuse/shared',
+        // Loaded by unstorage's `netlify-blobs` driver (modules/netlify.ts)
+        '@netlify/blobs',
+        // Provided by Nuxt; imported by the Netlify function entry
+        'nitropack',
+      ],
+      ignoreUnresolved: ['#oauth/config', '#nitro-internal-pollyfills'],
       ignoreFiles: ['app/components/UserCombobox.vue'],
     },
     'cli': {

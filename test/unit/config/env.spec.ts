@@ -4,6 +4,7 @@ const ALL_ENV_VARS = [
   'CONTEXT',
   'VERCEL_ENV',
   'URL',
+  'DEPLOY_PRIME_URL',
   'NUXT_ENV_VERCEL_URL',
   'NUXT_ENV_VERCEL_PROJECT_PRODUCTION_URL',
   'PULL_REQUEST',
@@ -49,6 +50,26 @@ describe('isCanary', () => {
     const { isCanary } = await import('~~/config/env')
 
     expect(isCanary).toBe(true)
+  })
+
+  it.each(['production', 'branch-deploy'])(
+    'returns true when Netlify CONTEXT is "%s" and branch is "main"',
+    async context => {
+      vi.stubEnv('CONTEXT', context)
+      vi.stubEnv('BRANCH', 'main')
+      const { isCanary } = await import('~~/config/env')
+
+      expect(isCanary).toBe(true)
+    },
+  )
+
+  it('returns false for a Netlify deploy preview of a PR targeting "main"', async () => {
+    vi.stubEnv('CONTEXT', 'deploy-preview')
+    vi.stubEnv('BRANCH', 'main')
+    vi.stubEnv('PULL_REQUEST', 'true')
+    const { isCanary } = await import('~~/config/env')
+
+    expect(isCanary).toBe(false)
   })
 
   it('returns false when VERCEL_ENV is "preview", branch is "main", but is a PR', async () => {
@@ -218,6 +239,15 @@ describe('getPreviewUrl', () => {
         URL: 'https://my-feat--preview.example.com',
       },
       'https://my-feat--preview.example.com',
+    ],
+    [
+      'Netlify deploy-preview with DEPLOY_PRIME_URL',
+      {
+        CONTEXT: 'deploy-preview',
+        URL: 'https://npmx.dev',
+        DEPLOY_PRIME_URL: 'https://deploy-preview-42--npmx.netlify.app',
+      },
+      'https://deploy-preview-42--npmx.netlify.app',
     ],
     [
       'Vercel development',

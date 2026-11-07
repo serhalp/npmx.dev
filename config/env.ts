@@ -42,16 +42,20 @@ const gitBranch = process.env.BRANCH || process.env.VERCEL_GIT_COMMIT_REF
 /**
  * Whether this is the canary environment (main.npmx.dev).
  *
- * Detected as any non-PR Vercel deploy from the `main` branch
+ * Detected as any non-PR Vercel or Netlify deploy from the `main` branch
  * (which may receive `VERCEL_ENV === 'production'`, `'preview'`, or a
- * custom `'canary'` environment depending on the project configuration).
+ * custom `'canary'` environment on Vercel, or `CONTEXT === 'production'` or
+ * `'branch-deploy'` on Netlify, depending on the project configuration).
  *
  * @see {@link https://vercel.com/docs/environment-variables/system-environment-variables#VERCEL_ENV}
+ * @see {@link https://docs.netlify.com/build/configure-builds/environment-variables/#build-metadata}
  */
 export const isCanary =
   (process.env.VERCEL_ENV === 'production' ||
     process.env.VERCEL_ENV === 'preview' ||
-    process.env.VERCEL_ENV === 'canary') &&
+    process.env.VERCEL_ENV === 'canary' ||
+    process.env.CONTEXT === 'production' ||
+    process.env.CONTEXT === 'branch-deploy') &&
   gitBranch === 'main' &&
   !isPR
 
@@ -75,9 +79,10 @@ export const isProduction =
   process.env.CONTEXT === 'production' || process.env.VERCEL_ENV === 'production'
 
 /**
- * Environment variable `URL` provided by Netlify.
- * This is always the current deploy URL, regardless of env.
- * @see {@link https://docs.netlify.com/build/functions/environment-variables/#functions}
+ * Environment variable `DEPLOY_PRIME_URL` provided by Netlify.
+ * The branch or deploy preview URL (e.g. `https://deploy-preview-42--npmx.netlify.app`).
+ * `URL` is the project's main URL, so it's only a fallback.
+ * @see {@link https://docs.netlify.com/build/configure-builds/environment-variables/#deploy-urls-and-metadata}
  *
  * Environment variable `VERCEL_URL` provided by Vercel.
  * This is always the current deploy URL, regardless of env.
@@ -88,17 +93,15 @@ export const isProduction =
  */
 export const getPreviewUrl = () =>
   isPreview
-    ? process.env.URL
-      ? process.env.URL
-      : process.env.NUXT_ENV_VERCEL_URL
-        ? `https://${process.env.NUXT_ENV_VERCEL_URL}`
-        : undefined
+    ? process.env.DEPLOY_PRIME_URL ||
+      process.env.URL ||
+      (process.env.NUXT_ENV_VERCEL_URL ? `https://${process.env.NUXT_ENV_VERCEL_URL}` : undefined)
     : undefined
 
 /**
  * Environment variable `URL` provided by Netlify.
- * This is always the current deploy URL, regardless of env.
- * @see {@link https://docs.netlify.com/build/functions/environment-variables/#functions}
+ * The project's main URL (its primary custom domain, if any).
+ * @see {@link https://docs.netlify.com/build/configure-builds/environment-variables/#deploy-urls-and-metadata}
  *
  * Environment variable `VERCEL_PROJECT_PRODUCTION_URL` provided by Vercel.
  * NOTE: Not a valid URL, as the protocol is omitted.
